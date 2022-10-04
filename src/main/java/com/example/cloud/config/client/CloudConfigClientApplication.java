@@ -19,9 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class CloudConfigClientApplication {
 
-	@Value("${test}")
+
 	String injected;
 	private static final Log LOG = LogFactory.getLog(CloudConfigClientApplication.class);
+
+	CloudConfigClientApplication(@Value("${test}") String injected) {
+		this.injected = injected;
+	}
 
 	public static void main(String[] args) {
 		SpringApplication.run(CloudConfigClientApplication.class, args);
@@ -43,6 +47,9 @@ class CloudConfigClientApplicationHints implements RuntimeHintsRegistrar {
 	public void registerHints(RuntimeHints hints, ClassLoader classLoader) {
 		hints.reflection()
 				.registerType(TypeReference.of(ConfigClientAutoConfiguration.class),
-						hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS));
+						hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS))
+				.registerType(TypeReference.of(CloudConfigClientApplication.class),
+						hint -> hint.withMembers(MemberCategory.INVOKE_DECLARED_CONSTRUCTORS, MemberCategory.DECLARED_FIELDS,
+								MemberCategory.INVOKE_DECLARED_METHODS));
 	}
 }
