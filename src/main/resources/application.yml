@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: client-service
+  config:
+    import: optional:configserver:http://localhost:8889
+  cloud:
+    refresh:
+      enabled: false
+logging:
+  level:
+    org.springframework: info
+server:
+  port: 9081
